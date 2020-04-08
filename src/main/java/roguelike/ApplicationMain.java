@@ -1,11 +1,14 @@
 package roguelike;
 
-import javax.swing.JFrame;
 import asciiPanel.AsciiPanel;
+import javax.swing.JFrame;
 
 public class ApplicationMain extends JFrame {
     private AsciiPanel terminal;
 
+    /**
+     * Starts a new AsciiPanel to being the game.
+     */
     public ApplicationMain() {
         super();
         terminal = new AsciiPanel();
@@ -14,6 +17,10 @@ public class ApplicationMain extends JFrame {
         pack();
     }
 
+    /**
+     * Main function that calls ApplicationMain.
+     * @param args Extra arguments if required
+     */
     public static void main(String[] args) {
         ApplicationMain app = new ApplicationMain();
         app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
