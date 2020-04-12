@@ -18,7 +18,6 @@ public class ApplicationMain extends JFrame implements KeyListener {
     private ApplicationMain() {
         super();
         terminal = new AsciiPanel(80, 30);
-        terminal.write("Roguelike in Java : Terminal test", 1, 1);
         add(terminal);
         pack();
         screen = new StartScreen();

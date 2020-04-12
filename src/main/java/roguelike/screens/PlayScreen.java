@@ -1,6 +1,8 @@
 package roguelike.screens;
 
 import asciiPanel.AsciiPanel;
+import roguelike.Creature;
+import roguelike.CreatureFactory;
 import roguelike.World;
 import roguelike.WorldBuilder;
 
@@ -9,6 +11,7 @@ import java.awt.event.KeyEvent;
 public class PlayScreen implements Screen {
 
     private World world;
+    private Creature player;
 
     // Width and Height of the play screen
     private int playWidth;
@@ -35,6 +38,9 @@ public class PlayScreen implements Screen {
         playWidth = 90;
 
         createWorld();
+
+        CreatureFactory creatureFactory = new CreatureFactory(world);
+        player = creatureFactory.newPlayer();
     }
 
     /**
@@ -51,20 +57,22 @@ public class PlayScreen implements Screen {
 
         displayTiles(terminal, left, top);
 
-        terminal.write('X', tileX - left, tileY - top);
+        terminal.write(player.getGlyph(), player.posx - left, player.posy - top, player.getColor());
         terminal.writeCenter("-- press [escape] to lose or [enter] to win --", 22);
 
         // Display Play screen position
         terminal.writeCenter("-- Game info --", 23);
         terminal.write("Left :" + left + ". Top : " + top,0, 24);
         terminal.write("Tile X :" + tileX + ". Tile Y : " + tileY,0, 25);
-        terminal.write("Player X :" + (tileX - left) + ". Player Y : " + (tileY - top),0, 26);
+        terminal.write("Player X :" + (player.posx - left) + ". Player Y : " + (player.posy - top),0, 26);
     }
 
     /**
      * Respond to user input.
      *
-     * @param key Key event occured while screen is displayed
+     * <p> Move the player using the move by functions </p>
+     *
+     * @param key Key event occurred while screen is displayed
      * @return Screen reference
      */
     public Screen respondToUserInput(KeyEvent key) {
@@ -74,16 +82,16 @@ public class PlayScreen implements Screen {
             case KeyEvent.VK_ENTER:
                 return new WinScreen();
             case KeyEvent.VK_LEFT:
-                scrollBy(-1, 0);
+                player.moveBy(-1, 0);
                 break;
             case KeyEvent.VK_RIGHT:
-                scrollBy(1, 0);
+                player.moveBy(1, 0);
                 break;
             case KeyEvent.VK_UP:
-                scrollBy(0, -1);
+                player.moveBy(0, -1);
                 break;
             case KeyEvent.VK_DOWN:
-                scrollBy(0, 1);
+                player.moveBy(0, 1);
                 break;
             default:
                 break;
@@ -101,11 +109,11 @@ public class PlayScreen implements Screen {
     }
 
     public int getScrollX() {
-        return Math.max(0, Math.min(tileX - screenWidth / 2, world.width() - screenWidth));
+        return Math.max(0, Math.min(player.posx - screenWidth / 2, world.width() - screenWidth));
     }
 
     public int getScrollY() {
-        return Math.max(0, Math.min(tileY - screenHeight / 2, world.height() - screenHeight));
+        return Math.max(0, Math.min(player.posy - screenHeight / 2, world.height() - screenHeight));
     }
 
     /**

@@ -1,6 +1,7 @@
 package roguelike;
 
 import java.awt.Color;
+import java.util.Map;
 
 public class World {
 
@@ -14,6 +15,14 @@ public class World {
 
     public int height() {
         return height;
+    }
+
+    public char getTileGlyph(int x, int y) {
+        return tile(x, y).glyph();
+    }
+
+    public Color getTileColor(int x, int y) {
+        return tile(x, y).color();
     }
 
     /**
@@ -45,11 +54,35 @@ public class World {
 
     }
 
-    public char getTileGlyph(int x, int y) {
-        return tile(x, y).glyph();
+    /**
+     * Function to dig walls.
+     *
+     * <p> Check if the tile is diggable and changes it to a FLOOR tile if true </p>
+     * @param x Coordinate x on tile map
+     * @param y Coordinate y on tile map
+     */
+    public void dig(int x, int y) {
+        if (tile(x,y).isDiggable()) {
+            tiles[x][y] = Tile.FLOOR;
+        }
     }
 
-    public Color getTileColor(int x, int y) {
-        return tile(x, y).color();
+    /**
+     * Creature has to start at a random empty location.
+     * @param creature Reference to the current creature
+     */
+    public void addAtEmptyLocation(Creature creature) {
+        int x;
+        int y;
+
+        do {
+            x = (int)(Math.random() * width);
+            y = (int)(Math.random() * height);
+        } while (!tile(x,y).isGround());
+
+        creature.posx = x;
+        creature.posy = y;
     }
+
+
 }
